@@ -88,12 +88,10 @@ class UnicodeTest {
     @Test
     void diacritics() {
         var come = "C̷̙̲̝͖ͭ̏ͥͮ͟Oͮ͏̮̪̝͍M̲̖͊̒ͪͩͬ̚̚͜Ȇ̴̟̟͙̞ͩ͌͝";
-        System.out.println(come.length());
         System.out.println(come.codePoints().count());
 
         /*
         System.out.println(StringUtils.stripAccents(come));
-        System.out.println(StringUtils.stripAccents(come).length());
         System.out.println(StringUtils.stripAccents(come).codePoints().count());
          */
     }
