@@ -99,6 +99,16 @@ class UnicodeTest {
     }
 
     @Test
+    void ligatures() {
+        System.out.println("Æ".codePoints().count());
+        System.out.println("ﬁ".codePoints().count());
+        /*
+        System.out.println("﷽".codePoints().count());
+        // In the name of God, Most Compassionate, Most Merciful
+         */
+    }
+
+    @Test
     void flags() {
         printChars("🇳🇱");
         printChars("🇳🇴");
