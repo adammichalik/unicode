@@ -1,6 +1,5 @@
 package com.github.adammichalik.unicode;
 
-
 import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 
@@ -42,11 +41,15 @@ class UnicodeTest {
         for (int i = dump.length() - 1; i >= 0; i--) {
             reverse.append(dump.charAt(i));
         }
-        System.out.println(reverse);
+        System.out.println("Reverse: " + reverse);
 
+        System.out.print("CP dump:       ");
         printCodePoints(dump);
+        System.out.print("Chars dump:    ");
         printChars(dump);
+        System.out.print("Cp reverse:    ");
         printCodePoints(reverse.toString());
+        System.out.print("Chars reverse: ");
         printChars(reverse.toString());
     }
 
@@ -78,6 +81,7 @@ class UnicodeTest {
         var Ü2 = "Ü";
         printChars(Ü1);
         printChars(Ü2);
+        printChars("U");
         for (Normalizer.Form form : Normalizer.Form.values()) {
             System.out.println("=== " + form + " ===");
             printChars(Normalizer.normalize(Ü1, form));
@@ -102,6 +106,8 @@ class UnicodeTest {
         System.out.println("ﬁ".codePoints().count());
         /*
         System.out.println("﷽".codePoints().count());
+         */
+        /*
         // In the name of God, Most Compassionate, Most Merciful
          */
     }
