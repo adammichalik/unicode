@@ -1,6 +1,7 @@
 package com.github.adammichalik.unicode;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
@@ -91,12 +92,12 @@ class UnicodeTest {
 
     @Test
     void diacritics() {
-        var come = "C̷̙̲̝͖ͭ̏ͥͮ͟Oͮ͏̮̪̝͍M̲̖͊̒ͪͩͬ̚̚͜Ȇ̴̟̟͙̞ͩ͌͝";
-        System.out.println(come.codePoints().count());
+        var zalgoText = "Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝";
+        System.out.println(zalgoText.codePoints().count());
 
         /*
-        System.out.println(StringUtils.stripAccents(come));
-        System.out.println(StringUtils.stripAccents(come).codePoints().count());
+        System.out.println(StringUtils.stripAccents(zalgoText));
+        System.out.println(StringUtils.stripAccents(zalgoText).codePoints().count());
          */
     }
 
@@ -109,16 +110,6 @@ class UnicodeTest {
          */
         /*
         // In the name of God, Most Compassionate, Most Merciful
-         */
-    }
-
-    @Test
-    void flags() {
-        printChars("🇳🇱");
-        printChars("🇳🇴");
-
-        /*
-        printChars("🇹🇼");
          */
     }
 
