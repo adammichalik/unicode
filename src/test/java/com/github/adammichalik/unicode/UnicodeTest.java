@@ -1,11 +1,12 @@
 package com.github.adammichalik.unicode;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.text.Normalizer;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -141,6 +142,25 @@ class UnicodeTest {
         printChars("🏼");
         printChars("🚀");
          */
+    }
+
+    @Test
+    void encodeDecode() {
+        for (String string : List.of("hello", "żółć", "안녕", "🚽💩")) {
+            encodeDecode(string);
+        }
+    }
+
+    private static void encodeDecode(String string) {
+        for (Charset encodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
+            var stringBytes = string.getBytes(encodingCharset);
+            var out = new ByteArrayOutputStream();
+            out.writeBytes(stringBytes);
+            for (Charset decodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
+                System.out.printf("%-6s -> %-6s: %s%n", encodingCharset, decodingCharset, out.toString(decodingCharset));
+            }
+        }
+        System.out.println();
     }
 
     private static void printChars(String str) {
