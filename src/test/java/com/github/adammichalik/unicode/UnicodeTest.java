@@ -49,10 +49,10 @@ class UnicodeTest {
         printCodePoints(dump);
         System.out.print("Chars dump:    ");
         printChars(dump);
-        System.out.print("Cp reverse:    ");
-        printCodePoints(reverse.toString());
         System.out.print("Chars reverse: ");
         printChars(reverse.toString());
+        System.out.print("CP reverse:    ");
+        printCodePoints(reverse.toString());
     }
 
     @Test
@@ -84,11 +84,31 @@ class UnicodeTest {
         printChars(Ü1);
         printChars(Ü2);
         printChars("U");
+        normalizeCompare(Ü1, Ü2);
+    }
+
+    private static void normalizeCompare(String s1, String s2) {
         for (Normalizer.Form form : Normalizer.Form.values()) {
             System.out.println("=== " + form + " ===");
-            printChars(Normalizer.normalize(Ü1, form));
-            printChars(Normalizer.normalize(Ü2, form));
+            printChars(Normalizer.normalize(s1, form));
+            printChars(Normalizer.normalize(s2, form));
         }
+    }
+
+    @Test
+    void ligature() {
+        System.out.println("ﬁ");
+        printChars("ﬁ");
+        System.out.println("ﬁ".codePoints().count());
+        normalizeCompare("ﬁ", "fi");
+    }
+
+    @Test
+    void theLargestUnicodeCharacter() {
+        System.out.println("﷽".codePoints().count());
+        /*
+        In the name of God, Most Compassionate, Most Merciful
+        */
     }
 
     @Test
@@ -99,18 +119,6 @@ class UnicodeTest {
         /*
         System.out.println(StringUtils.stripAccents(zalgoText));
         System.out.println(StringUtils.stripAccents(zalgoText).codePoints().count());
-         */
-    }
-
-    @Test
-    void ligatures() {
-        System.out.println("Æ".codePoints().count());
-        System.out.println("ﬁ".codePoints().count());
-        /*
-        System.out.println("﷽".codePoints().count());
-         */
-        /*
-        // In the name of God, Most Compassionate, Most Merciful
          */
     }
 
