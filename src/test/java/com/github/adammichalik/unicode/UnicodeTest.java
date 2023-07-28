@@ -1,11 +1,11 @@
 package com.github.adammichalik.unicode;
 
-import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.text.Normalizer;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,9 +65,9 @@ class UnicodeTest {
     void bytes() {
         Charset[] charsets = {UTF_8, UTF_16, UTF_16LE, UTF_16BE, Charset.forName("UTF-32"), Charset.forName("UTF-32LE"), Charset.forName("UTF-32BE")};
         for (Charset charset : charsets) {
-            System.out.println(charset + ": " + Hex.encodeHexString("💩".getBytes(charset), false));
+            System.out.printf("%-8s: %17s%n", charset, toHexString("💩".getBytes(charset)));
         }
-        System.out.println("Platform (" + Charset.defaultCharset() + "): " + Hex.encodeHexString("💩".getBytes(), false));
+        System.out.printf("D(%s): %17s%n", Charset.defaultCharset(), toHexString("💩".getBytes()));
     }
 
     @Test
@@ -180,6 +180,16 @@ class UnicodeTest {
     }
 
     private static void printHex(IntStream intStream) {
-        System.out.println(intStream.mapToObj(Integer::toHexString).map(String::toUpperCase).collect(Collectors.joining(" ")));
+        System.out.println(toHexString(intStream, 4));
     }
+
+    private static String toHexString(byte[] bytes) {
+        return toHexString(IntStream.range(0, bytes.length).map(i -> 0xFF & bytes[i]), 2);
+    }
+
+    private static String toHexString(IntStream intStream, int digits) {
+        return intStream.mapToObj(i -> hexFormat.toHexDigits(i, digits)).collect(Collectors.joining(" "));
+    }
+
+    private static final HexFormat hexFormat = HexFormat.of().withUpperCase();
 }
