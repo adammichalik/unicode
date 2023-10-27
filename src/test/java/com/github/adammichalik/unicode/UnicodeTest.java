@@ -23,7 +23,7 @@ class UnicodeTest {
 
         /*
         printCodePoints("💩");
-         */
+        */
     }
 
     @Test
@@ -34,6 +34,11 @@ class UnicodeTest {
     @Test
     void substring() {
         System.out.println("💩".substring(0, 1));
+
+        /*
+        printChars("💩");
+        printChars("💩".substring(0, 1));
+        */
     }
 
     @Test
