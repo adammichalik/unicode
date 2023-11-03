@@ -26,16 +26,20 @@ class UnicodeTest {
     void length() {
         print("💩length:", "💩".length());
 
+        /*
         print("💩 CP:", codePoints("💩"));
         print("💩 CP count:", "💩".codePoints().count());
+         */
     }
 
     @Test
     void substring() {
         print("💩 substring:", "💩".substring(0, 1));
 
+        /*
         print("💩 chars:", chars("💩"));
         print("💩 chars[0]", chars("💩".substring(0, 1)));
+         */
     }
 
     @Test
@@ -56,8 +60,8 @@ class UnicodeTest {
 
     @Test
     void reverseStringCorrect() {
-        var dump = "🚽💩";
-        print(new StringBuilder(dump).reverse());
+        var string = "🚽💩";
+        print(new StringBuilder(string).reverse());
     }
 
     @Test
@@ -67,6 +71,13 @@ class UnicodeTest {
             System.out.printf("%-8s: %17s%n", charset, toHexString("💩".getBytes(charset)));
         }
         System.out.printf("D(%s): %17s%n", Charset.defaultCharset(), toHexString("💩".getBytes()));
+    }
+
+    @Test
+    void encodeDecode() {
+        for (String string : List.of("hello", "żółć", "안녕", "🚽💩")) {
+            encodeDecode(string);
+        }
     }
 
     @Test
@@ -94,7 +105,7 @@ class UnicodeTest {
     }
 
     @Test
-    void theLargestUnicodeCharacter() {
+    void howManyCodePoints() {
         var big = "﷽";
         print(big.codePoints().count());
         /*
@@ -107,8 +118,10 @@ class UnicodeTest {
         var zalgoText = "Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝";
         print(zalgoText, zalgoText.codePoints().count());
 
+        /*
         var stripped = StringUtils.stripAccents(zalgoText);
         print(stripped, stripped.codePoints().count());
+         */
     }
 
     @Test
@@ -124,28 +137,12 @@ class UnicodeTest {
     @Test
     void astronaut() {
         print("👩🏼‍🚀", codePoints("👩🏼‍🚀"));
+
+        /*
         print("👩", codePoints("👩"));
         print("🏼", codePoints("🏼"));
         print("🚀", codePoints("🚀"));
-    }
-
-    @Test
-    void encodeDecode() {
-        for (String string : List.of("hello", "żółć", "안녕", "🚽💩")) {
-            encodeDecode(string);
-        }
-    }
-
-    private static void encodeDecode(String string) {
-        for (Charset encodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
-            var stringBytes = string.getBytes(encodingCharset);
-            var out = new ByteArrayOutputStream();
-            out.writeBytes(stringBytes);
-            for (Charset decodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
-                System.out.printf("%-6s -> %-6s: %s%n", encodingCharset, decodingCharset, out.toString(decodingCharset));
-            }
-        }
-        System.out.println();
+         */
     }
 
 //  ----- Utilities -----
@@ -185,6 +182,20 @@ class UnicodeTest {
 
     private static void print(Object... objects) {
         System.out.println(Arrays.stream(objects).map(String::valueOf).collect(joining(" ")));
+    }
+
+    private static void encodeDecode(String string) {
+        print("===", string, "===");
+        for (Charset encodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
+            var stringBytes = string.getBytes(encodingCharset);
+            var out = new ByteArrayOutputStream();
+            out.writeBytes(stringBytes);
+            print(encodingCharset, "bytes:", toHexString(stringBytes));
+            for (Charset decodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
+                System.out.printf("%-6s -> %-6s: %s%n", encodingCharset, decodingCharset, out.toString(decodingCharset));
+            }
+        }
+        print();
     }
 
     private static final HexFormat hexFormat = HexFormat.of().withUpperCase();
