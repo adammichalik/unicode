@@ -1,5 +1,6 @@
 package com.github.adammichalik.unicode;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -8,14 +9,17 @@ import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_16BE;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
 
+@SuppressWarnings("ALL")
 class UnicodeTest {
 
     @Test
@@ -23,11 +27,6 @@ class UnicodeTest {
         print("💩length:", "💩".length());
 
         print("💩 CP:", codePoints("💩"));
-    }
-
-    @Test
-    void codePoints() {
-
         print("💩 CP count:", "💩".codePoints().count());
     }
 
@@ -40,16 +39,17 @@ class UnicodeTest {
     }
 
     @Test
-    void reverseStringGoogle() {
-        var dump = "🚽💩";
+    void reverseStringHackerRank() {
+        var string = "🚽💩";
+        print("String: ", string);
         var reverse = new StringBuilder();
-        for (int i = dump.length() - 1; i >= 0; i--) {
-            reverse.append(dump.charAt(i));
+        for (int i = string.length() - 1; i >= 0; i--) {
+            reverse.append(string.charAt(i));
         }
         print("Reverse:", reverse);
 
-        print("CP dump:      ", codePoints(dump));
-        print("Chars dump:   ", chars(dump));
+        print("CP string:    ", codePoints(string));
+        print("Chars string: ", chars(string));
         print("Chars reverse:", chars(reverse.toString()));
         print("CP reverse:   ", codePoints(reverse.toString()));
     }
@@ -80,36 +80,23 @@ class UnicodeTest {
     void üü() {
         var Ü1 = "Ü";
         var Ü2 = "Ü";
-        print(Ü1 + 1, chars(Ü1));
-        print(Ü2 + 2, chars(Ü2));
-        print("U", chars("U"));
+        print(Ü1 + 1, codePoints(Ü1));
+        print(Ü2 + 2, codePoints(Ü2));
+        print("U", codePoints("U"));
         normalizeCompare(Ü1, Ü2);
     }
 
     @Test
     void ligature() {
-        compareLigature("ﬁ", "fi");
+        compareLigature("ﬃ", "ffi");
+        print();
         compareLigature("ĳ", "ij");
-    }
-
-    private static void compareLigature(String ligature, String split) {
-        System.out.println(ligature);
-        printChars(ligature);
-        System.out.println(ligature.codePoints().count());
-        normalizeCompare(ligature, split);
-    }
-
-    private static void normalizeCompare(String s1, String s2) {
-        for (Normalizer.Form form : Normalizer.Form.values()) {
-            print("=== ", form, " ===");
-            print(s1 + 1, chars(Normalizer.normalize(s1, form)));
-            print(s2 + 2, chars(Normalizer.normalize(s2, form)));
-        }
     }
 
     @Test
     void theLargestUnicodeCharacter() {
-        System.out.println("﷽".codePoints().count());
+        var big = "﷽";
+        print(big.codePoints().count());
         /*
         In the name of God, Most Compassionate, Most Merciful
         */
@@ -118,42 +105,28 @@ class UnicodeTest {
     @Test
     void diacritics() {
         var zalgoText = "Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝";
-        System.out.println(zalgoText.codePoints().count());
+        print(zalgoText, zalgoText.codePoints().count());
 
-        /*
-        System.out.println(StringUtils.stripAccents(zalgoText));
-        System.out.println(StringUtils.stripAccents(zalgoText).codePoints().count());
-         */
+        var stripped = StringUtils.stripAccents(zalgoText);
+        print(stripped, stripped.codePoints().count());
     }
 
     @Test
     void growingFamily() {
-        printChars("👨");
-        /*
-        printChars("👨‍👩");
-         */
-        /*
-        printChars("👨‍👩‍👧");
-         */
-        /*
-        printChars("👨‍👩‍👧‍👦");
-         */
+        print("👨  ", codePoints("👨"));
+        print("👨‍👩", codePoints("👨‍👩"));
+        print("👨‍👩‍👧  ", codePoints("👨‍👩‍👧"));
+        print("👨‍👩‍👧‍👦  ", codePoints("👨‍👩‍👧‍👦"));
 
-        /*
-        System.out.println("👨‍👩‍👧‍👦".length());
-        System.out.println("👨‍👩‍👧‍👦".codePoints().count());
-         */
+        print("👨‍👩‍👧‍👦", "length:", "👨‍👩‍👧‍👦".length(), "CP:", "👨‍👩‍👧‍👦".codePoints().count());
     }
 
     @Test
     void astronaut() {
-        printChars("👩🏼‍🚀");
-
-        /*
-        printChars("👩");
-        printChars("🏼");
-        printChars("🚀");
-         */
+        print("👩🏼‍🚀", codePoints("👩🏼‍🚀"));
+        print("👩", codePoints("👩"));
+        print("🏼", codePoints("🏼"));
+        print("🚀", codePoints("🚀"));
     }
 
     @Test
@@ -175,24 +148,27 @@ class UnicodeTest {
         System.out.println();
     }
 
-    private static void printChars(String str) {
-        printHex(str.chars());
+//  ----- Utilities -----
+
+    private static void compareLigature(String ligature, String split) {
+        print(ligature, codePoints(ligature), "(CP: " + ligature.codePoints().count() + ")");
+        normalizeCompare(ligature, split);
+    }
+
+    private static void normalizeCompare(String s1, String s2) {
+        for (Normalizer.Form form : Normalizer.Form.values()) {
+            print("=== ", form, " ===");
+            print(s1, codePoints(Normalizer.normalize(s1, form)));
+            print(s2, codePoints(Normalizer.normalize(s2, form)));
+        }
     }
 
     private static String chars(String str) {
         return toHexString(str.chars(), 4);
     }
 
-    private static void printCodePoints(String str) {
-        printHex(str.codePoints());
-    }
-
     private static String codePoints(String str) {
-        return toHexString(str.codePoints(), 4);
-    }
-
-    private static void printHex(IntStream intStream) {
-        System.out.println(toHexString(intStream, 4));
+        return toHexString(str.codePoints(), 8, nibble -> StringUtils.stripStart(nibble, "0"));
     }
 
     private static String toHexString(byte[] bytes) {
@@ -200,7 +176,11 @@ class UnicodeTest {
     }
 
     private static String toHexString(IntStream intStream, int digits) {
-        return intStream.mapToObj(i -> hexFormat.toHexDigits(i, digits)).collect(joining(" "));
+        return toHexString(intStream, digits, identity());
+    }
+
+    private static String toHexString(IntStream intStream, int digits, Function<String, String> nibblePostFormatter) {
+        return intStream.mapToObj(i -> nibblePostFormatter.apply(hexFormat.toHexDigits(i, digits))).collect(joining(" "));
     }
 
     private static void print(Object... objects) {
