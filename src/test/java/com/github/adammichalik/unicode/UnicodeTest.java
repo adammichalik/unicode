@@ -84,7 +84,7 @@ class UnicodeTest {
     void equals() {
         var Ü1 = "Ü";
         var Ü2 = "Ü";
-        print(Ü1 + "=" + Ü2 + " :", Ü1.equals(Ü2));
+        print(Ü1 + "=" + Ü2 + ":", Ü1.equals(Ü2));
     }
 
     @Test
@@ -105,15 +105,6 @@ class UnicodeTest {
     }
 
     @Test
-    void howManyCodePoints() {
-        var big = "﷽";
-        print(big.codePoints().count());
-        /*
-        In the name of God, Most Compassionate, Most Merciful
-        */
-    }
-
-    @Test
     void diacritics() {
         var zalgoText = "Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝";
         print(zalgoText, zalgoText.codePoints().count());
@@ -126,10 +117,10 @@ class UnicodeTest {
 
     @Test
     void growingFamily() {
-        print("👨  ", codePoints("👨"));
+        print("👨", codePoints("👨"));
         print("👨‍👩", codePoints("👨‍👩"));
-        print("👨‍👩‍👧  ", codePoints("👨‍👩‍👧"));
-        print("👨‍👩‍👧‍👦  ", codePoints("👨‍👩‍👧‍👦"));
+        print("👨‍👩‍👧", codePoints("👨‍👩‍👧"));
+        print("👨‍👩‍👧‍👦", codePoints("👨‍👩‍👧‍👦"));
 
         print("👨‍👩‍👧‍👦", "length:", "👨‍👩‍👧‍👦".length(), "CP:", "👨‍👩‍👧‍👦".codePoints().count());
     }
