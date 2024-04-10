@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
+import java.text.BreakIterator;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.HexFormat;
@@ -99,9 +100,17 @@ class UnicodeTest {
 
     @Test
     void ligature() {
+        print(List.of("aﬃrm", "affix", "africa").stream().sorted().toList());
+
+        /*
         compareLigature("ﬃ", "ffi");
-        print();
-        compareLigature("ĳ", "ij");
+         */
+
+        /*
+        print(List.of("aﬃrm", "affix", "africa").stream()
+                .sorted((s1, s2) -> Normalizer.normalize(s1, NFKD).compareTo(Normalizer.normalize(s2, NFKD)))
+                .toList());
+         */
     }
 
     @Test
@@ -126,18 +135,27 @@ class UnicodeTest {
     }
 
     @Test
-    void astronaut() {
-        print("👩🏼‍🚀", codePoints("👩🏼‍🚀"));
+    void teacher() {
+        print("👩🏾‍🏫", codePoints("👩🏾‍🏫"));
 
         /*
         print("👩", codePoints("👩"));
-        print("🏼", codePoints("🏼"));
-        print("🚀", codePoints("🚀"));
+        print("🏾", codePoints("🏾"));
+        print("🏫", codePoints("🏫"));
          */
+
+        print("👩🏾‍🏫", "length:", "👩🏾‍🏫".length(), "CP:", "👩🏾‍🏫".codePoints().count());
     }
 
-//  ----- Utilities -----
+    @Test
+    void length_theRightWay() {
+        print("👨‍👩‍👧‍👦", "length:", lengthWithGraphemeClusters("👨‍👩‍👧‍👦"));
+        print("👩🏾‍🏫", "length:", lengthWithGraphemeClusters("👩🏾‍🏫"));
+        print("👨‍👩‍👧‍👦👩🏾‍🏫", "length:", lengthWithGraphemeClusters("👨‍👩‍👧‍👦👩🏾‍🏫"));
+        print("Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝", "length:", lengthWithGraphemeClusters("Ẓ̵̈́̉͜â̴̖̻ĺ̷̮͈g̸̲̹̈o̵͖͇̾̀ ̵̺̐̈́t̴̹̳̏ḙ̵̏̄x̶̥̲́̃t̶̜͎͌͝"));
+    }
 
+    //  ----- Utilities -----
     private static void compareLigature(String ligature, String split) {
         print(ligature, codePoints(ligature), "(CP: " + ligature.codePoints().count() + ")");
         normalizeCompare(ligature, split);
@@ -149,6 +167,16 @@ class UnicodeTest {
             print(s1, codePoints(Normalizer.normalize(s1, form)));
             print(s2, codePoints(Normalizer.normalize(s2, form)));
         }
+    }
+
+    private int lengthWithGraphemeClusters(String text) {
+        BreakIterator breakIterator = BreakIterator.getCharacterInstance();
+        breakIterator.setText(text);
+        int length = 0;
+        for (int start = breakIterator.first(), end = breakIterator.next(); end != BreakIterator.DONE; start = end, end = breakIterator.next()) {
+            length++;
+        }
+        return length;
     }
 
     private static String chars(String str) {
@@ -181,7 +209,6 @@ class UnicodeTest {
             var stringBytes = string.getBytes(encodingCharset);
             var out = new ByteArrayOutputStream();
             out.writeBytes(stringBytes);
-            print(encodingCharset, "bytes:", toHexString(stringBytes));
             for (Charset decodingCharset : new Charset[]{UTF_8, UTF_16, Charset.forName("UTF-32")}) {
                 System.out.printf("%-6s -> %-6s: %s%n", encodingCharset, decodingCharset, out.toString(decodingCharset));
             }
