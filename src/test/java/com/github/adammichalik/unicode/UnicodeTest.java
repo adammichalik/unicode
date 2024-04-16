@@ -67,8 +67,7 @@ class UnicodeTest {
 
     @Test
     void bytes() {
-        Charset[] charsets = {UTF_8, UTF_16, UTF_16LE, UTF_16BE, Charset.forName("UTF-32"), Charset.forName("UTF-32LE"), Charset.forName("UTF-32BE")};
-        for (Charset charset : charsets) {
+        for (Charset charset : allCharsets()) {
             System.out.printf("%-8s: %17s%n", charset, toHexString("💩".getBytes(charset)));
         }
         System.out.printf("D(%s): %17s%n", Charset.defaultCharset(), toHexString("💩".getBytes()));
@@ -156,6 +155,11 @@ class UnicodeTest {
     }
 
     //  ----- Utilities -----
+
+    private Charset[] allCharsets() {
+        return new Charset[]{UTF_8, UTF_16, UTF_16LE, UTF_16BE, Charset.forName("UTF-32"), Charset.forName("UTF-32LE"), Charset.forName("UTF-32BE")};
+    }
+
     private static void compareLigature(String ligature, String split) {
         print(ligature, codePoints(ligature), "(CP: " + ligature.codePoints().count() + ")");
         normalizeCompare(ligature, split);
