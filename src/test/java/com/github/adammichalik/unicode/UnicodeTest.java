@@ -17,6 +17,7 @@ import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_16BE;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.text.Normalizer.Form.NFKD;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
 
@@ -68,9 +69,15 @@ class UnicodeTest {
     @Test
     void bytes() {
         for (Charset charset : allCharsets()) {
-            System.out.printf("%-8s: %17s%n", charset, toHexString("💩".getBytes(charset)));
+            System.out.printf(
+                    "%-8s: %17s%n",
+                    charset,
+                    toHexString("💩".getBytes(charset)));
         }
-        System.out.printf("D(%s): %17s%n", Charset.defaultCharset(), toHexString("💩".getBytes()));
+        System.out.printf(
+                "D(%s): %17s%n",
+                Charset.defaultCharset(),
+                toHexString("💩".getBytes()));
     }
 
     @Test
@@ -107,7 +114,9 @@ class UnicodeTest {
 
         /*
         print(List.of("aﬃrm", "affix", "africa").stream()
-                .sorted((s1, s2) -> Normalizer.normalize(s1, NFKD).compareTo(Normalizer.normalize(s2, NFKD)))
+                .sorted((s1, s2) ->
+                        Normalizer.normalize(s1, NFKD)
+                                .compareTo(Normalizer.normalize(s2, NFKD)))
                 .toList());
          */
     }
@@ -127,6 +136,7 @@ class UnicodeTest {
     void growingFamily() {
         print("👨", codePoints("👨"));
         print("👨‍👩", codePoints("👨‍👩"));
+        print("👨‍👩 reversed", new StringBuilder("👨‍👩").reverse());
         print("👨‍👩‍👧", codePoints("👨‍👩‍👧"));
         print("👨‍👩‍👧‍👦", codePoints("👨‍👩‍👧‍👦"));
 
